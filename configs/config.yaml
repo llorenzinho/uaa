@@ -1,0 +1,6 @@
+server:
+  host: 127.0.0.1
+  port: 8080
+
+database:
+  connectionString: "postgres://user:goauthpassword@localhost:5432/authdb?sslmode=disable"

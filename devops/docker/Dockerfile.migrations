@@ -1,0 +1,4 @@
+FROM golang:1.25.6
+
+# Install Goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest

@@ -1,0 +1,55 @@
+services:
+  pg:
+    image: postgres:18
+    container_name: auth_server_postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: goauthpassword
+      POSTGRES_DB: authdb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "authdb", "-U", "user"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 3s
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/18/docker
+
+  initDatabase:
+    image: postgres:18
+    container_name: auth_server_pg_init
+    depends_on:
+      pg:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: goauthpassword
+    volumes:
+      - ./database/migrations:/migrations
+    command: >
+      sh -c "
+      echo 'Postgres is ready. Create goose database';
+      psql -U user -d authdb -h pg -c \"CREATE DATABASE auth_migrations;\" || true;
+      psql -U user -d authdb -h pg -c \"CREATE USER server WITH PASSWORD 'serverpassword'; GRANT ALL PRIVILEGES ON DATABASE auth_migrations TO server; GRANT ALL PRIVILEGES ON DATABASE authdb TO server;\" || true;
+      psql -U user -d auth_migrations -h pg -c \"CREATE EXTENSION IF NOT EXISTS \\\"uuid-ossp\\\";\" || true;
+      psql -U user -d authdb -h pg -c \"CREATE EXTENSION IF NOT EXISTS \\\"uuid-ossp\\\";\";
+      "
+  
+  migrations:
+    container_name: auth_server_pg_migrations
+    build: 
+      context: ./devops/docker
+      dockerfile: Dockerfile.migrations
+    depends_on:
+      initDatabase:
+        condition: service_completed_successfully
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: "host=pg user=user password=goauthpassword dbname=authdb sslmode=disable"
+    volumes:
+      - ./database/migrations:/migrations
+    command: goose up -dir /migrations postgres "host=pg user=user password=goauthpassword dbname=authdb sslmode=disable"
+
+volumes:
+  pgdata:
