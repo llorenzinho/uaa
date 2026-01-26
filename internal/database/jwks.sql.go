@@ -79,7 +79,7 @@ func (q *Queries) CreateNewRs256Key(ctx context.Context, db DBTX, arg CreateNewR
 }
 
 const deleteExpiredKey = `-- name: DeleteExpiredKey :many
-DELETE FROM jwk_keys WHERE expires_at < NOW()
+DELETE FROM jwk_keys WHERE expires_at <= NOW()
 RETURNING kid, private_key_pem, public_key_pem, algorithm, is_active, created_at, expires_at
 `
 

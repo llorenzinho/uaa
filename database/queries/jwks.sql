@@ -17,5 +17,5 @@ SET is_active = (kid = $1)
 RETURNING *;
 
 -- name: DeleteExpiredKey :many
-DELETE FROM jwk_keys WHERE expires_at < NOW()
+DELETE FROM jwk_keys WHERE expires_at <= NOW()
 RETURNING *;

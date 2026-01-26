@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
@@ -37,7 +38,7 @@ func (j *JwksService) generatePEMKeyPairs() *rsa.PrivateKey {
 	return private
 }
 
-func (j *JwksService) pEMEncode(k *rsa.PrivateKey) ([]byte, []byte) {
+func (j *JwksService) peMEncode(k *rsa.PrivateKey) ([]byte, []byte) {
 	var privateKeyBytes []byte = x509.MarshalPKCS1PrivateKey(k)
 	publicKeyBytes, err := x509.MarshalPKIXPublicKey(&k.PublicKey)
 	l := log.Get()
@@ -58,20 +59,27 @@ func (j *JwksService) pEMEncode(k *rsa.PrivateKey) ([]byte, []byte) {
 	return privateKeyPemBytes, publicKeyPemBytes
 }
 
+func (j *JwksService) CreateKid(publicPem []byte) string {
+	hash := sha256.Sum256(publicPem)
+	return base64.RawURLEncoding.EncodeToString(hash[:])
+}
+
 func (j *JwksService) Rotate() {
 	key := j.generatePEMKeyPairs()
-	privPem, pubPem := j.pEMEncode(key)
-	q := database.New()
+	privPem, pubPem := j.peMEncode(key)
+	kid := j.CreateKid(pubPem)
 
-	kid := base64.RawURLEncoding.EncodeToString(pubPem)
+	q := database.New()
 	ctx, cls := context.WithTimeout(context.Background(), time.Second*3)
 	defer cls()
-	q.CreateNewRs256Key(ctx, j.p, database.CreateNewRs256KeyParams{
+	if _, err := q.CreateNewRs256Key(ctx, j.p, database.CreateNewRs256KeyParams{
 		Kid:           kid,
 		PrivateKeyPem: string(privPem),
 		PublicKeyPem:  string(pubPem),
 		ExpiresAt:     pgtype.Timestamptz{Valid: true, Time: time.Now().Add(time.Hour * 24 * 7)}, // Make Configurable
-	})
+	}); err != nil {
+		j.l.Fatal("JWK Key record creation failed", zap.Error(err))
+	}
 	delKeys, err := q.DeleteExpiredKey(ctx, j.p)
 	if err != nil {
 		j.l.Fatal("Failed ")
