@@ -13,7 +13,8 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
+	"github.com/llorenzinho/goauth/pkg/client"
+	"github.com/llorenzinho/goauth/pkg/log"
 	"go.uber.org/zap"
 )
 
@@ -91,4 +92,24 @@ func (j *JwksService) Rotate() {
 	}
 	j.l.Info("Successfuly deleted expired keys", zap.Strings("keys", delKeysStrings))
 	q.ActivateKey(ctx, j.p, kid)
+}
+
+func (j *JwksService) ListValidJwkKeys() ([]client.JwkKey, error) {
+	ctx, del := context.WithTimeout(context.Background(), time.Second*3)
+	defer del()
+	keys, err := database.New().ListKeys(ctx, j.p)
+	if err != nil {
+		return nil, err
+	}
+	// map db keys into client key
+
+	kSchemas := make([]client.JwkKey, len(keys))
+	for i, k := range keys {
+		kSchemas[i] = client.JwkKey{
+			Kid:          k.Kid,
+			PublicKeyPem: k.PublicKeyPem,
+			Algorithm:    k.Algorithm,
+		}
+	}
+	return kSchemas, nil
 }

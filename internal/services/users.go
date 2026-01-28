@@ -9,8 +9,8 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/llorenzinho/goauth/internal"
 	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
 	"github.com/llorenzinho/goauth/internal/rest/dtos"
+	"github.com/llorenzinho/goauth/pkg/log"
 	"go.uber.org/zap"
 )
 

@@ -4,7 +4,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/llorenzinho/goauth/internal/log"
+	"github.com/llorenzinho/goauth/pkg/log"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )

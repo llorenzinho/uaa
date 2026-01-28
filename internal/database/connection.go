@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/llorenzinho/goauth/internal/config"
-	"github.com/llorenzinho/goauth/internal/log"
+	"github.com/llorenzinho/goauth/pkg/log"
 	"go.uber.org/zap"
 )
 

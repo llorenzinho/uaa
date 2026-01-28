@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/llorenzinho/goauth/internal/config"
 	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
 	"github.com/llorenzinho/goauth/internal/rest/controllers"
 	"github.com/llorenzinho/goauth/internal/rest/middlewares"
 	"github.com/llorenzinho/goauth/internal/services"
+	"github.com/llorenzinho/goauth/pkg/log"
 	"go.uber.org/zap"
 )
 
@@ -37,9 +37,11 @@ func main() {
 
 	// Services
 	userService := services.NewUserService(pool)
+	jwkService := services.NewJwksService(pool)
 
 	// Controllers
 	userController := controllers.NewUserController(userService)
+	jwkController := controllers.NewJwkController(&jwkService)
 
 	r := gin.New()
 	r.Use(gin.Recovery())
@@ -48,9 +50,12 @@ func main() {
 	api := r.Group("api")
 	v1 := api.Group("v1")
 	userApi := v1.Group("users")
+	jwkApi := v1.Group("jwk")
 
 	userApi.GET(":id", userController.GetUserByID)
 	userApi.POST("", userController.CreateUser)
+
+	jwkApi.GET("", jwkController.HandleListJwk)
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", config.ServerConfig.Host, config.ServerConfig.Port),
