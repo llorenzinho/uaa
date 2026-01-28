@@ -12,8 +12,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
+	"github.com/llorenzinho/goauth/api/internal/database"
+	"github.com/llorenzinho/goauth/api/internal/log"
 	"go.uber.org/zap"
 )
 

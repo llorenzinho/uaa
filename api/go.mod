@@ -1,4 +1,4 @@
-module github.com/llorenzinho/goauth
+module github.com/llorenzinho/goauth/api
 
 go 1.25.4
 

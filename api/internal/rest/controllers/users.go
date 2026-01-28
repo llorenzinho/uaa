@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/llorenzinho/goauth/internal"
-	"github.com/llorenzinho/goauth/internal/rest/dtos"
-	"github.com/llorenzinho/goauth/internal/services"
+	"github.com/llorenzinho/goauth/api/internal"
+	"github.com/llorenzinho/goauth/api/internal/rest/dtos"
+	"github.com/llorenzinho/goauth/api/internal/services"
 )
 
 type UserController struct {

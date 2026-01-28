@@ -8,12 +8,12 @@ import (
 	"syscall"
 
 	"github.com/gin-gonic/gin"
-	"github.com/llorenzinho/goauth/internal/config"
-	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
-	"github.com/llorenzinho/goauth/internal/rest/controllers"
-	"github.com/llorenzinho/goauth/internal/rest/middlewares"
-	"github.com/llorenzinho/goauth/internal/services"
+	"github.com/llorenzinho/goauth/api/internal/config"
+	"github.com/llorenzinho/goauth/api/internal/database"
+	"github.com/llorenzinho/goauth/api/internal/log"
+	"github.com/llorenzinho/goauth/api/internal/rest/controllers"
+	"github.com/llorenzinho/goauth/api/internal/rest/middlewares"
+	"github.com/llorenzinho/goauth/api/internal/services"
 	"go.uber.org/zap"
 )
 

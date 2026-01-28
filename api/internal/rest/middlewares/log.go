@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/llorenzinho/goauth/internal/log"
+	"github.com/llorenzinho/goauth/api/internal/log"
 	"go.uber.org/zap"
 )
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/llorenzinho/goauth/internal/config"
-	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/services"
+	"github.com/llorenzinho/goauth/api/internal/config"
+	"github.com/llorenzinho/goauth/api/internal/database"
+	"github.com/llorenzinho/goauth/api/internal/services"
 )
 
 func main() {

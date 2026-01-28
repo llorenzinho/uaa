@@ -7,10 +7,10 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/llorenzinho/goauth/internal"
-	"github.com/llorenzinho/goauth/internal/database"
-	"github.com/llorenzinho/goauth/internal/log"
-	"github.com/llorenzinho/goauth/internal/rest/dtos"
+	"github.com/llorenzinho/goauth/api/internal"
+	"github.com/llorenzinho/goauth/api/internal/database"
+	"github.com/llorenzinho/goauth/api/internal/log"
+	"github.com/llorenzinho/goauth/api/internal/rest/dtos"
 	"go.uber.org/zap"
 )
 
