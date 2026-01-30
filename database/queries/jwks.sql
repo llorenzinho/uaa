@@ -1,6 +1,9 @@
 -- name: ListKeys :many
 SELECT * FROM jwk_keys WHERE expires_at > NOW();
 
+-- name: GetActiveJwk :one
+SELECT * FROM jwk_keys WHERE expires_at > NOW() AND is_active = 1;
+
 -- name: GetJwksKey :one
 SELECT * FROM jwk_keys
 WHERE kid = $1

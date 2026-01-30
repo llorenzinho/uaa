@@ -20,10 +20,15 @@ type keyStoreChecker interface {
 	Exist(string) bool
 }
 
+type keyStoreActive interface {
+	Active() *JwkKey
+}
+
 type KeyStore interface {
 	keyStoreGetter
 	keyStoreSetter
 	keyStoredeleter
 	keyStoreCleaner
 	keyStoreChecker
+	keyStoreActive
 }

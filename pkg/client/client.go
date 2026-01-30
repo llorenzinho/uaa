@@ -26,7 +26,7 @@ type UaaClient struct {
 func NewUaaClient(baseEndpoint string, opts ...UaaOption) *UaaClient {
 	cl := &UaaClient{
 		c:            &http.Client{},
-		s:            &InMemoryKeystore{},
+		s:            NewInMemoryKeyStore(),
 		timeout:      time.Second * 5, // Default timeout
 		ctx:          context.Background(),
 		baseEndpoint: baseEndpoint,

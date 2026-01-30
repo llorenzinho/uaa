@@ -111,6 +111,25 @@ func (q *Queries) DeleteExpiredKey(ctx context.Context, db DBTX) ([]JwkKey, erro
 	return items, nil
 }
 
+const getActiveJwk = `-- name: GetActiveJwk :one
+SELECT kid, private_key_pem, public_key_pem, algorithm, is_active, created_at, expires_at FROM jwk_keys WHERE expires_at > NOW() AND is_active = 1
+`
+
+func (q *Queries) GetActiveJwk(ctx context.Context, db DBTX) (JwkKey, error) {
+	row := db.QueryRow(ctx, getActiveJwk)
+	var i JwkKey
+	err := row.Scan(
+		&i.Kid,
+		&i.PrivateKeyPem,
+		&i.PublicKeyPem,
+		&i.Algorithm,
+		&i.IsActive,
+		&i.CreatedAt,
+		&i.ExpiresAt,
+	)
+	return i, err
+}
+
 const getJwksKey = `-- name: GetJwksKey :one
 SELECT kid, private_key_pem, public_key_pem, algorithm, is_active, created_at, expires_at FROM jwk_keys
 WHERE kid = $1

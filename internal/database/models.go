@@ -9,6 +9,19 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type AuthorizationCode struct {
+	Code                string             `db:"code" json:"code"`
+	UserID              uuid.UUID          `db:"user_id" json:"userId"`
+	ClientID            string             `db:"client_id" json:"clientId"`
+	RedirectUri         string             `db:"redirect_uri" json:"redirectUri"`
+	Scope               *string            `db:"scope" json:"scope"`
+	CodeChallenge       *string            `db:"code_challenge" json:"codeChallenge"`
+	CodeChallengeMethod *string            `db:"code_challenge_method" json:"codeChallengeMethod"`
+	ExpiresAt           pgtype.Timestamptz `db:"expires_at" json:"expiresAt"`
+	Used                *bool              `db:"used" json:"used"`
+	CreatedAt           pgtype.Timestamptz `db:"created_at" json:"createdAt"`
+}
+
 type JwkKey struct {
 	Kid           string             `db:"kid" json:"kid"`
 	PrivateKeyPem string             `db:"private_key_pem" json:"privateKeyPem"`

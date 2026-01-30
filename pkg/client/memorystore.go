@@ -9,6 +9,13 @@ type InMemoryKeystore struct {
 	d map[string]JwkKey
 }
 
+func NewInMemoryKeyStore() *InMemoryKeystore {
+	return &InMemoryKeystore{
+		l: sync.Mutex{},
+		d: make(map[string]JwkKey),
+	}
+}
+
 func (ms *InMemoryKeystore) Get(kid string) (*JwkKey, error) {
 	k, ok := ms.d[kid]
 	if !ok {
@@ -42,4 +49,14 @@ func (ms *InMemoryKeystore) Exist(s string) bool {
 	_, exists := ms.d[s]
 	ms.l.Unlock()
 	return exists
+}
+
+func (ms *InMemoryKeystore) Active() *JwkKey {
+	ms.l.Lock()
+	for _, k := range ms.d {
+		if k.IsActive {
+			return &k
+		}
+	}
+	return nil // here we should panic maybe
 }
